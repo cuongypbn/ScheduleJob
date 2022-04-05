@@ -1,0 +1,51 @@
+plugins {
+    id 'application'
+    id 'com.google.protobuf' version '0.8.18'
+    id 'idea'
+}
+
+//group 'com.example.core'
+//version '1.0-SNAPSHOT'
+
+repositories {
+    maven { // The google mirror is less flaky than mavenCentral()
+        url "https://maven-central.storage-download.googleapis.com/maven2/" }
+    mavenCentral()
+    mavenLocal()
+}
+
+def grpcVersion = '1.45.0' // CURRENT_GRPC_VERSION
+def protobufVersion = '3.19.4'
+def protocVersion = protobufVersion
+
+dependencies {
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+//    compileOnly "org.apache.tomcat:annotations-api:6.0.53"
+    implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '0.7.3'
+
+}
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
+    }
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+startScripts.enabled = false

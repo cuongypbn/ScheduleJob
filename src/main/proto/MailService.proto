@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "vn.cmctelecom.scheduler.mailDetect";
+option java_outer_classname = "MailServiceProto";
+option objc_class_prefix = "HLW";
+
+package mailService;
+
+service  MailService{
+  rpc DetectMail (MailRequest) returns (MailReply){}
+}
+message MailInfo {
+  string mailStoreProtocol=1;
+  string mailImapsHost=2;
+  string mailImapsPort=3;
+  string mailImapsTimeout=4;
+  string host=5;
+  string user=6;
+  string pwd=7;
+}
+
+message MailRequest{
+  oneof mail_OneOf {
+    MailInfo mailInfo =1;
+  }
+  //  repeated mailInfo mailInfo = 1;
+  string  typeScan =2;
+}
+
+message MailReply{
+  oneof mail_OneOf {
+    MailInfo mailInfo =1;
+  }
+  string  typeScan =2;
+}
